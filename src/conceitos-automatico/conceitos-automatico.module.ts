@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+import { ConceitosAutomaticoController } from './conceitos-automatico.controller';
 
 @Module({
     imports: [],
-    controllers: [],
+    controllers: [ConceitosAutomaticoController],
     providers: [],
     exports: [],
 })
