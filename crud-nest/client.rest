@@ -5,7 +5,7 @@
 GET {{baseUrl}}/recados/?limit=10&offset=10
 
 ### Busca um recado específico
-GET {{baseUrl}}/recados/1
+GET {{baseUrl}}/recados/2
 
 ### Cria um novo recado
 POST {{baseUrl}}/recados
