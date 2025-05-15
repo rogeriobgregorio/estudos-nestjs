@@ -1,3 +1,5 @@
+import { CreateRecadoDto } from './dto/create-recado.dto';
+import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { RecadosService } from './recados.service';
 import {
   Body,
@@ -29,13 +31,13 @@ export class RecadosController {
   }
 
   @Post()
-  create(@Body() body: any) {
-    return this.RecadosService.create(body);
+  create(@Body() createRecadoDto: CreateRecadoDto) {
+    return this.RecadosService.create(createRecadoDto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: any) {
-    return this.RecadosService.update(+id, body);
+  update(@Param('id') id: string, @Body() updateRecadoDto: UpdateRecadoDto) {
+    return this.RecadosService.update(+id, updateRecadoDto);
   }
 
   @Delete(':id')
