@@ -5,7 +5,7 @@
 GET {{baseUrl}}/recados/?limit=10&offset=10
 
 ### Busca um recado específico
-GET {{baseUrl}}/recados/2a
+GET {{baseUrl}}/recados/1
 
 ### Cria um novo recado
 POST {{baseUrl}}/recados
@@ -18,13 +18,11 @@ Content-Type: application/json
   }
 
 ### Atualiza um recado existente
-PATCH {{baseUrl}}/recados/2
+PATCH {{baseUrl}}/recados/1
 Content-Type: application/json
 
   {
-    "texto": "Este é um recado atualizado",
-    "de": "João da Silva",
-    "para": "Maria da Silva"
+    "texto": "Este é um recado atualizado"
   }
 
 
