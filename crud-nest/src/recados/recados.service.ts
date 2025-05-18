@@ -2,60 +2,70 @@ import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Recado } from './entites/recado.entity';
 import { CreateRecadoDto } from './dto/create-recado.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class RecadosService {
-  private lastId = 1;
-  private recados: Recado[] = [
-    {
-      id: 1,
-      texto: 'Este é o primeiro recado',
-      de: 'João',
-      para: 'Maria',
-      lido: false,
-      data: new Date(),
-    },
-  ];
+  constructor(
+    @InjectRepository(Recado)
+    private readonly recadoRepository: Repository<Recado>,
+  ) {}
 
-  findAll(): Recado[] {
-    return this.recados;
+  async findAll(): Promise<Recado[]> {
+    const recados = await this.recadoRepository.find();
+    return recados;
   }
 
-  findOne(id: number): Recado {
-    const recado = this.recados.find(recado => recado.id === id);
+  async findOne(id: number): Promise<Recado> {
+    const recado = await this.recadoRepository.findOne({
+      where: { id },
+    });
+
     if (!recado) {
       throw new NotFoundException('Recado não encontrado');
     }
     return recado;
   }
 
-  create(createRecadoDto: CreateRecadoDto): Recado {
-    this.lastId++;
-    const id = this.lastId;
-    const novoRecado: Recado = {
-      id,
+  async create(createRecadoDto: CreateRecadoDto): Promise<Recado> {
+    const novoRecado = {
       ...createRecadoDto,
       lido: false,
       data: new Date(),
     };
-    this.recados.push(novoRecado);
+
+    const recado = this.recadoRepository.create(novoRecado);
+    return await this.recadoRepository.save(recado);
+  }
+
+  async update(id: number, updateRecadoDto: UpdateRecadoDto): Promise<Recado> {
+    const partialUpdateRecadoDto = {
+      lido: updateRecadoDto?.lido,
+      texto: updateRecadoDto?.texto,
+    };
+
+    const recado = await this.recadoRepository.preload({
+      id,
+      ...partialUpdateRecadoDto,
+    });
+
+    if (!recado) {
+      throw new NotFoundException('Recado não encontrado');
+    }
+
+    const novoRecado = await this.recadoRepository.save(recado);
     return novoRecado;
   }
 
-  update(id: number, updateRecadoDto: UpdateRecadoDto): Recado {
-    const index = this.recados.findIndex(recado => recado.id === id);
-    if (index === -1) {
-      throw new NotFoundException('Recado não encontrado');
-    }
-    this.recados[index] = { ...this.recados[index], ...updateRecadoDto };
-    return this.recados[index];
-  }
+  async remove(id: number): Promise<void> {
+    const recado = await this.recadoRepository.findOne({
+      where: { id },
+    });
 
-  remove(id: number): void {
-    const index = this.recados.findIndex(recado => recado.id === id);
-    if (index === -1) {
+    if (!recado) {
       throw new NotFoundException('Recado não encontrado');
     }
-    this.recados.splice(index, 1);
+    await this.recadoRepository.remove(recado);
   }
 }
