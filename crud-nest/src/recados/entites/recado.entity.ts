@@ -23,7 +23,7 @@ export class Recado {
   @Column({ default: false })
   lido: boolean;
 
-  @Column()
+  @Column({ type: 'timestamp' })
   data: Date;
 
   @CreateDateColumn({ type: 'timestamp' })
