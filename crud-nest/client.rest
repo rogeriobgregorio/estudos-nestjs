@@ -25,6 +25,36 @@ Content-Type: application/json
     "texto": "Este é um recado atualizado"
   }
 
-
 ### Deleta um recado
 DELETE {{baseUrl}}/recados/2
+
+##############################
+
+# PESSOAS
+### Busca todas as pessoas
+GET {{baseUrl}}/pessoas/?limit=10&offset=10
+
+### Busca uma pessoa específica
+GET {{baseUrl}}/pessoas/6
+
+### Cria uma nova pessoa
+POST {{baseUrl}}/pessoas
+Content-Type: application/json
+
+  {
+    "email": "joao@email.com",
+    "password": "123456",
+    "nome": "João da Silva"
+  }
+
+### Atualiza uma pessoa existente
+PATCH {{baseUrl}}/pessoas/3
+Content-Type: application/json
+
+  {
+    "nome": "João da Silva Atualizado"
+  }
+
+
+### Deleta uma pessoa
+DELETE {{baseUrl}}/pessoas/3
