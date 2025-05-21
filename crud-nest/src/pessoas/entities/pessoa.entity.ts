@@ -5,7 +5,9 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Recado } from '../../recados/entites/recado.entity';
 
 @Entity('pessoas')
 export class Pessoa {
@@ -27,4 +29,10 @@ export class Pessoa {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt?: Date;
+
+  @OneToMany(() => Recado, (recado: Recado) => recado.de)
+  recadosEnviados: Recado[];
+
+  @OneToMany(() => Recado, (recado: Recado) => recado.para)
+  recadosRecebidos: Recado[];
 }
