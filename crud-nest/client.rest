@@ -12,9 +12,9 @@ POST {{baseUrl}}/recados
 Content-Type: application/json
 
   {
-    "texto": "Este é um novo recado",
-    "de": "João da Silva",
-    "para": "Maria"
+    "texto": "Este é um novo recado de João para Joana",
+    "deId": 6,
+    "paraId": 7
   }
 
 ### Atualiza um recado existente
@@ -26,7 +26,7 @@ Content-Type: application/json
   }
 
 ### Deleta um recado
-DELETE {{baseUrl}}/recados/2
+DELETE {{baseUrl}}/recados/1
 
 ##############################
 
@@ -42,9 +42,9 @@ POST {{baseUrl}}/pessoas
 Content-Type: application/json
 
   {
-    "email": "joao@email.com",
+    "email": "joana@email.com",
     "password": "123456",
-    "nome": "João da Silva"
+    "nome": "Joana da Silva"
   }
 
 ### Atualiza uma pessoa existente
