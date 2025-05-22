@@ -2,7 +2,9 @@
 
 # RECADOS
 ### Busca todos os recados
-GET {{baseUrl}}/recados/?limit=10&offset=10
+GET {{baseUrl}}/recados/
+?limit=10
+&offset=10
 
 ### Busca um recado específico
 GET {{baseUrl}}/recados/1
