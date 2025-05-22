@@ -1,3 +1,4 @@
+import { PaginationDto } from './../common/dto/paginatio.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Recado } from './entites/recado.entity';
@@ -14,8 +15,12 @@ export class RecadosService {
     private readonly pessoasService: PessoasService,
   ) {}
 
-  async findAll(): Promise<Recado[]> {
+  async findAll(paginationDto?: PaginationDto): Promise<Recado[]> {
+    const { limit = 10, offset = 0 } = paginationDto ?? {};
+
     const recados = await this.recadoRepository.find({
+      take: limit,
+      skip: offset,
       relations: ['de', 'para'],
       order: {
         id: 'DESC',
@@ -83,19 +88,9 @@ export class RecadosService {
   }
 
   async update(id: number, updateRecadoDto: UpdateRecadoDto): Promise<Recado> {
-    const partialUpdateRecadoDto = {
-      lido: updateRecadoDto?.lido,
-      texto: updateRecadoDto?.texto,
-    };
-
-    const recado = await this.recadoRepository.preload({
-      id,
-      ...partialUpdateRecadoDto,
-    });
-
-    if (!recado) {
-      throw new NotFoundException('Recado não encontrado');
-    }
+    const recado = await this.findOne(id);
+    recado.texto = updateRecadoDto?.texto ?? recado.texto;
+    recado.lido = updateRecadoDto?.lido ?? recado.lido;
 
     const novoRecado = await this.recadoRepository.save(recado);
     return novoRecado;

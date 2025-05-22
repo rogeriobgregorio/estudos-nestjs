@@ -17,11 +17,11 @@ export class Recado {
   @Column({ type: 'varchar', length: 255 })
   texto: string;
 
-  @ManyToOne(() => Pessoa)
+  @ManyToOne(() => Pessoa, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'de' })
   de: Pessoa;
 
-  @ManyToOne(() => Pessoa)
+  @ManyToOne(() => Pessoa, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'para' })
   para: Pessoa;
 
