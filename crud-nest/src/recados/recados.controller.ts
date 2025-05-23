@@ -14,9 +14,11 @@ import {
   Patch,
   Post,
   Query,
+  UsePipes,
 } from '@nestjs/common';
 
 @Controller('recados')
+@UsePipes(ParseIntPipe)
 export class RecadosController {
   constructor(private readonly RecadosService: RecadosService) {}
 
@@ -27,7 +29,7 @@ export class RecadosController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: number) {
     return this.RecadosService.findOne(id);
   }
 
@@ -37,15 +39,12 @@ export class RecadosController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: string,
-    @Body() updateRecadoDto: UpdateRecadoDto,
-  ) {
+  update(@Param('id') id: string, @Body() updateRecadoDto: UpdateRecadoDto) {
     return this.RecadosService.update(+id, updateRecadoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: number) {
     return this.RecadosService.remove(id);
   }
 }
