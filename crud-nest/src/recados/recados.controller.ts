@@ -14,8 +14,10 @@ import {
   Patch,
   Post,
   Query,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
+import { AddHeaderInterceptor } from 'src/common/interceptors/add-header.interceptor';
 
 @Controller('recados')
 @UsePipes(ParseIntPipe)
@@ -24,6 +26,7 @@ export class RecadosController {
 
   @HttpCode(HttpStatus.OK)
   @Get()
+  @UseInterceptors(AddHeaderInterceptor)
   findAll(@Query() paginationDto: PaginationDto) {
     return this.RecadosService.findAll(paginationDto);
   }

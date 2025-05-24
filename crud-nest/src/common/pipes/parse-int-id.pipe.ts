@@ -8,6 +8,8 @@ import {
 @Injectable()
 export class ParseIntIdPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata): any {
+    console.log('ParseIntPipe executed');
+
     if (metadata.type !== 'param' || metadata.data !== 'id') {
       return value;
     }
