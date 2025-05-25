@@ -18,7 +18,10 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { AddHeaderInterceptor } from 'src/common/interceptors/add-header.interceptor';
+import { ErrorHandlingInterceptor } from 'src/common/interceptors/error-handling.interceptor';
+import { SimpleCacheInterceptor } from 'src/common/interceptors/simple-cache.interceptor';
 
+@UseInterceptors(SimpleCacheInterceptor)
 @Controller('recados')
 @UsePipes(ParseIntPipe)
 export class RecadosController {
@@ -26,7 +29,7 @@ export class RecadosController {
 
   @HttpCode(HttpStatus.OK)
   @Get()
-  @UseInterceptors(AddHeaderInterceptor)
+  @UseInterceptors(AddHeaderInterceptor, ErrorHandlingInterceptor)
   findAll(@Query() paginationDto: PaginationDto) {
     return this.RecadosService.findAll(paginationDto);
   }
