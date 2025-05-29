@@ -18,8 +18,9 @@ export class AuthTokenInterceptor implements NestInterceptor {
     const token =
       typeof authHeader === 'string' ? authHeader.split(' ')[1] : undefined;
 
-    console.log('Auth Token:', token);
-
+    if (!token) {
+      throw new Error('Authorization token is missing');
+    }
     return next.handle();
   }
 }

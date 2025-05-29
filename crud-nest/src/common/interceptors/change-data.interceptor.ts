@@ -11,8 +11,6 @@ export class ChangeDataInterceptor implements NestInterceptor {
   private readonly cache = new Map();
 
   intercept<T>(context: ExecutionContext, next: CallHandler): Observable<T> {
-    console.log('ChangeDataInterceptor executed');
-
     return next.handle().pipe(
       map((data: T) => {
         return data;

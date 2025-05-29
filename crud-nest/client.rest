@@ -4,10 +4,10 @@
 ### Busca todos os recados
 GET {{baseUrl}}/recados/
 ?limit=10
-&offset=10
+&offset=0
 
 ### Busca um recado específico
-GET {{baseUrl}}/recados/1
+GET {{baseUrl}}/recados/4
 
 ### Cria um novo recado
 POST {{baseUrl}}/recados
@@ -20,7 +20,7 @@ Content-Type: application/json
   }
 
 ### Atualiza um recado existente
-PATCH {{baseUrl}}/recados/1
+PATCH {{baseUrl}}/recados/4
 Content-Type: application/json
 
   {
@@ -28,7 +28,7 @@ Content-Type: application/json
   }
 
 ### Deleta um recado
-DELETE {{baseUrl}}/recados/1
+DELETE {{baseUrl}}/recados/4
 
 ##############################
 

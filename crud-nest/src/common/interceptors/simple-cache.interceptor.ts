@@ -14,13 +14,10 @@ export class SimpleCacheInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler,
   ): Promise<Observable<any>> {
-    console.log('SimpleCacheInterceptor executed');
-
     const request = context.switchToHttp().getRequest<Request>();
     const url = request.url;
 
     if (this.cache.has(url)) {
-      console.log('Está no cache', url);
       return of(this.cache.get(url));
     }
 
@@ -28,7 +25,6 @@ export class SimpleCacheInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(data => {
-        console.log('Adicionando ao cache', url);
         this.cache.set(url, data);
       }),
     );

@@ -8,15 +8,12 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
-  UsePipes,
 } from '@nestjs/common';
 
 @Controller('recados')
-@UsePipes(ParseIntPipe)
 export class RecadosController {
   constructor(private readonly RecadosService: RecadosService) {}
 

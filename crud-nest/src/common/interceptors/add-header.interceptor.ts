@@ -13,7 +13,6 @@ export class AddHeaderInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler<any>,
   ): Observable<any> | Promise<any> {
-    console.log('AddHeaderInterceptor executed');
     const response = context.switchToHttp().getResponse<Response>();
     response.setHeader('X-Added-Header', 'This is a custom header');
     return next.handle();
