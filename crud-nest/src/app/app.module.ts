@@ -11,6 +11,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PessoasModule } from '../pessoas/pessoas.module';
 import { SimpleMiddleware } from 'src/common/middleawares/simple.middleaware';
 import { MyExceptioFilter } from 'src/common/filters/my-exception.filter';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { IsAdminGuard } from 'src/common/guards/is-admin.guard';
 
 @Module({
   imports: [
@@ -31,8 +33,12 @@ import { MyExceptioFilter } from 'src/common/filters/my-exception.filter';
   providers: [
     AppService,
     {
-      provide: 'APP_FILTER',
+      provide: APP_FILTER,
       useClass: MyExceptioFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: IsAdminGuard,
     },
   ],
 })
