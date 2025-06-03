@@ -1,3 +1,4 @@
+import { RecadosUtils } from 'src/recados/recados.utils';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { RecadosService } from './recados.service';
@@ -7,15 +8,22 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
   Query,
 } from '@nestjs/common';
+import { SERVER_NAME } from '../common/constants/server-name.constant';
 
 @Controller('recados')
 export class RecadosController {
-  constructor(private readonly RecadosService: RecadosService) {}
+  constructor(
+    private readonly RecadosService: RecadosService,
+    private readonly recadosUtils: RecadosUtils,
+    @Inject(SERVER_NAME)
+    private readonly serverName: string,
+  ) {}
 
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
