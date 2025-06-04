@@ -12,6 +12,7 @@ import {
 } from 'src/recados/recados.constant';
 import { RemoveSpacesRegex } from 'src/common/regex/remove-spaces.regex';
 import { OnlyLowercaseLettersRegex } from 'src/common/regex/only-lowercase-letters.regex';
+import { RegexFactory } from 'src/common/regex/regex.factory';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { OnlyLowercaseLettersRegex } from 'src/common/regex/only-lowercase-lette
   providers: [
     RecadosService,
     RecadosUtils,
+    RegexFactory,
     {
       provide: 'SERVER_NAME',
       useValue: SERVER_NAME,
@@ -33,6 +35,20 @@ import { OnlyLowercaseLettersRegex } from 'src/common/regex/only-lowercase-lette
     {
       provide: REMOVE_SPACES_REGEX,
       useClass: RemoveSpacesRegex,
+    },
+    {
+      provide: REMOVE_SPACES_REGEX,
+      useFactory: (regexFactory: RegexFactory) => {
+        return regexFactory.create('RemoveSpacesRegex');
+      },
+      inject: [RegexFactory],
+    },
+    {
+      provide: ONLY_LOWERCASE_LETTERS_REGEX,
+      useFactory: (regexFactory: RegexFactory) => {
+        return regexFactory.create('OnlyLowercaseLettersRegex');
+      },
+      inject: [RegexFactory],
     },
   ],
   exports: [RecadosService, RecadosUtils],

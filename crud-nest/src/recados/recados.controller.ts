@@ -14,7 +14,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { SERVER_NAME } from './recados.constant';
+import { REMOVE_SPACES_REGEX, SERVER_NAME } from './recados.constant';
 import { RegexProtocol } from 'src/common/regex/regex.protocol';
 
 @Controller('recados')
@@ -31,6 +31,9 @@ export class RecadosController {
 
     @Inject('ONLY_LOWERCASE_LETTERS_REGEX')
     private readonly onlyLowercaseLettersRegex: RegexProtocol,
+
+    @Inject(REMOVE_SPACES_REGEX)
+    private readonly RemoveSpacesRegex: RegexProtocol,
   ) {}
 
   @Get()
