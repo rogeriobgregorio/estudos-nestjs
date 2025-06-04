@@ -1,0 +1,3 @@
+export const SERVER_NAME = 'crud-nest-server';
+export const ONLY_LOWERCASE_LETTERS_REGEX = 'ONLY_LOWERCASE_LETTERS_REGEX';
+export const REMOVE_SPACES_REGEX = 'REMOVE_SPACES_REGEX';
