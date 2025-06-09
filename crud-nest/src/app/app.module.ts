@@ -5,13 +5,27 @@ import { RecadosModule } from '../recados/recados.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PessoasModule } from '../pessoas/pessoas.module';
 import { ConfigModule } from '@nestjs/config';
+import Joi from '@hapi/joi';
 
 @Module({
   imports: [
     RecadosModule,
     PessoasModule,
     // Configuration module to load environment variables
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      // envFilePath: ['.env', '.env.local'], // Load .env and .env.local files
+      // ignoreEnvFile: false, // Do not ignore .env files
+      validationSchema: Joi.object({
+        DATABASE_TYPE: Joi.string().required(),
+        DATABASE_HOST: Joi.string().required(),
+        DATABASE_PORT: Joi.number().default(5432),
+        DATABASE_USERNAME: Joi.string().required(),
+        DATABASE_PASSWORD: Joi.string().required(),
+        DATABASE_NAME: Joi.string().required(),
+        DATABASE_AUTOLOADENTITIES: Joi.boolean().default(true),
+        DATABASE_SYNCHRONIZE: Joi.boolean().default(false),
+      }),
+    }),
     // TypeORM configuration
     TypeOrmModule.forRoot({
       type: process.env.DATABASE_TYPE as 'postgres',
