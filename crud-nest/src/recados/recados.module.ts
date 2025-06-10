@@ -13,9 +13,11 @@ import {
 import { RemoveSpacesRegex } from 'src/common/regex/remove-spaces.regex';
 import { OnlyLowercaseLettersRegex } from 'src/common/regex/only-lowercase-letters.regex';
 import { RegexFactory } from 'src/common/regex/regex.factory';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule,
     TypeOrmModule.forFeature([Recado]),
     forwardRef(() => PessoasModule),
   ],

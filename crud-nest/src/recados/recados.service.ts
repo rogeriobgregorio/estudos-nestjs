@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PessoasService } from '../pessoas/pessoas.service';
 import { RecadosUtils } from './recados.utils';
+import { ConfigService } from '@nestjs/config';
 
 // Scope.DEFAULT means that the service is a singleton and will be instantiated once per application lifecycle.
 // Scope.REQUEST would mean that a new instance is created for each request, which is not necessary here.
@@ -19,7 +20,13 @@ export class RecadosService {
     private readonly recadoRepository: Repository<Recado>,
     private readonly pessoasService: PessoasService,
     private readonly recadosUtils: RecadosUtils,
-  ) {}
+    private readonly configService: ConfigService, // Injecting ConfigService to access configuration values
+  ) {
+    // You can use the configService to access environment variables or configuration values
+    const databaseUsername =
+      this.configService.get<string>('DATABASE_USERNAME');
+    console.log(`Database name: ${databaseUsername}`); // Example usage of ConfigService
+  }
 
   async findAll(paginationDto?: PaginationDto): Promise<Recado[]> {
     const { limit = 10, offset = 0 } = paginationDto ?? {};
