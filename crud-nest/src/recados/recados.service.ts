@@ -1,6 +1,6 @@
 import { PaginationDto } from './../common/dto/paginatio.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
-import { Injectable, NotFoundException, Scope } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { Recado } from './entites/recado.entity';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { PessoasService } from '../pessoas/pessoas.service';
 import { RecadosUtils } from './recados.utils';
 import { ConfigService } from '@nestjs/config';
+import appConfig from 'src/app/app.config';
 
 // Scope.DEFAULT means that the service is a singleton and will be instantiated once per application lifecycle.
 // Scope.REQUEST would mean that a new instance is created for each request, which is not necessary here.
@@ -21,6 +22,9 @@ export class RecadosService {
     private readonly pessoasService: PessoasService,
     private readonly recadosUtils: RecadosUtils,
     private readonly configService: ConfigService, // Injecting ConfigService to access configuration values
+
+    @Inject(appConfig.KEY) // Injecting the appConfig to access configuration values
+    private readonly appConfigurations: ConfigService<typeof appConfig>,
   ) {
     // You can use the configService to access environment variables or configuration values
     const databaseUsername =

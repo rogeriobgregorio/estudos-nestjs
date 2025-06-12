@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { RecadosModule } from '../recados/recados.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PessoasModule } from '../pessoas/pessoas.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigType } from '@nestjs/config';
 import Joi from '@hapi/joi';
 import appConfig from './app.config';
 
@@ -12,11 +12,13 @@ import appConfig from './app.config';
   imports: [
     RecadosModule,
     PessoasModule,
+    ConfigModule.forFeature(appConfig), // Import the app configuration
     // Configuration module to load environment variables
     ConfigModule.forRoot({
       // envFilePath: ['.env', '.env.local'], // Load .env and .env.local files
       // ignoreEnvFile: false, // Do not ignore .env files
       load: [appConfig], // Load custom configuration
+      // Validate environment variables using Joi
       validationSchema: Joi.object({
         DATABASE_TYPE: Joi.string().required(),
         DATABASE_HOST: Joi.string().required(),
@@ -39,22 +41,20 @@ import appConfig from './app.config';
       autoLoadEntities: Boolean(process.env.DATABASE_AUTOLOADENTITIES),
       synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE), // Note: set to false in production
     }),
-    // Alternatively, use TypeOrmModule.forRootAsync for dynamic configuration
+    // Alternatively, using TypeORM with async configuration
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
+      inject: [appConfig.KEY],
+      useFactory: (appConfigurations: ConfigType<typeof appConfig>) => {
         return {
-          type: configService.get<'postgres'>('database.type'),
-          host: configService.get<string>('database.host'),
-          port: configService.get<number>('database.port'),
-          username: configService.get<string>('database.username'),
-          database: configService.get<string>('database.database'),
-          password: configService.get<string>('database.password'),
-          autoLoadEntities: configService.get<boolean>(
-            'database.autoLoadEntities',
-          ),
-          synchronize: configService.get<boolean>('database.synchronize'),
+          type: appConfigurations.database.type as 'postgres',
+          host: appConfigurations.database.host,
+          port: appConfigurations.database.port,
+          username: appConfigurations.database.username,
+          database: appConfigurations.database.database,
+          password: appConfigurations.database.password,
+          autoLoadEntities: appConfigurations.database.autoLoadEntities,
+          synchronize: appConfigurations.database.synchronize,
         };
       },
     }),
