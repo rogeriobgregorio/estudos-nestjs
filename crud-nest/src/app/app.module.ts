@@ -7,11 +7,13 @@ import { PessoasModule } from '../pessoas/pessoas.module';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import Joi from '@hapi/joi';
 import appConfig from './app.config';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
     RecadosModule,
     PessoasModule,
+    AuthModule,
     ConfigModule.forFeature(appConfig), // Import the app configuration
     // Configuration module to load environment variables
     ConfigModule.forRoot({
