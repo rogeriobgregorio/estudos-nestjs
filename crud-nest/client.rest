@@ -57,6 +57,17 @@ Content-Type: application/json
     "nome": "João da Silva Atualizado"
   }
 
-
 ### Deleta uma pessoa
 DELETE {{baseUrl}}/pessoas/3
+
+##############################
+
+# AUTH
+### Login de uma pessoa
+POST {{baseUrl}}/auth/
+Content-Type: application/json
+
+  {
+    "email": "joao@email.com",
+    "password": "123456"
+  }
