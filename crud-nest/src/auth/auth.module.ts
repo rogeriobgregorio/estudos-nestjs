@@ -1,11 +1,14 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { Global, Module } from '@nestjs/common';
 import { HashingService } from './hashing/hashing.service';
 import { BcryptService } from './hashing/bcrypt.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { Pessoa } from 'src/pessoas/entities/pessoa.entity';
 
 @Global()
 @Module({
+  imports: [TypeOrmModule.forFeature([Pessoa])],
   controllers: [AuthController],
   providers: [
     {
