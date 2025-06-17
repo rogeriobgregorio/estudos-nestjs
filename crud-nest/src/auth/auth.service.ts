@@ -3,6 +3,8 @@ import { LoginDto } from './dto/login.dto';
 import { Repository } from 'typeorm';
 import { Pessoa } from 'src/pessoas/entities/pessoa.entity';
 import { HashingService } from './hashing/hashing.service';
+import jwtConfig from './config/jwt.config';
+import { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -10,6 +12,8 @@ export class AuthService {
     @Inject(Pessoa)
     private readonly pessoaRepository: Repository<Pessoa>,
     private readonly hashingService: HashingService,
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) {}
 
   async login(loginDto: LoginDto) {
