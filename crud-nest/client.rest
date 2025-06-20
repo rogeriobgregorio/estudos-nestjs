@@ -1,4 +1,5 @@
 @baseUrl = http://localhost:3000
+@authToken = {{authenticate.response.body.accessToken}}
 
 # RECADOS
 ### Busca todos os recados
@@ -63,7 +64,8 @@ DELETE {{baseUrl}}/pessoas/3
 ##############################
 
 # AUTH
-### Login de uma pessoa
+### Autentica um usuário
+# @name authenticate
 POST {{baseUrl}}/auth/
 Content-Type: application/json
 

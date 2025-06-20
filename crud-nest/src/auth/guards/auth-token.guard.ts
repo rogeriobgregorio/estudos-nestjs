@@ -10,6 +10,7 @@ import { Request } from 'express';
 import jwtConfig from '../config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { REQUEST_TOKEN_PAYLOAD_KEY } from '../auth.constants';
+import { JwtPayload } from './jwt-payload.guard';
 
 @Injectable()
 export class AuthTokenGuard implements CanActivate {
@@ -49,13 +50,4 @@ export class AuthTokenGuard implements CanActivate {
 
     return authorization.split(' ')[1];
   }
-}
-
-interface JwtPayload {
-  sub: string | number;
-  email: string;
-  secret: string;
-  audience: string;
-  issuer: string;
-  expiresIn: string | number;
 }
