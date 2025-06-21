@@ -36,9 +36,11 @@ DELETE {{baseUrl}}/recados/4
 # PESSOAS
 ### Busca todas as pessoas
 GET {{baseUrl}}/pessoas/?limit=10&offset=10
+Authorization: Bearer {{authToken}}
 
 ### Busca uma pessoa específica
 GET {{baseUrl}}/pessoas/6
+Authorization: Bearer {{authToken}}
 
 ### Cria uma nova pessoa
 POST {{baseUrl}}/pessoas
@@ -52,6 +54,7 @@ Content-Type: application/json
 
 ### Atualiza uma pessoa existente
 PATCH {{baseUrl}}/pessoas/3
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
   {
@@ -60,6 +63,7 @@ Content-Type: application/json
 
 ### Deleta uma pessoa
 DELETE {{baseUrl}}/pessoas/3
+Authorization: Bearer {{authToken}}
 
 ##############################
 

@@ -10,7 +10,7 @@ import { Request } from 'express';
 import jwtConfig from '../config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { REQUEST_TOKEN_PAYLOAD_KEY } from '../auth.constants';
-import { JwtPayload } from './jwt-payload.guard';
+import { TokenPayloadDto } from '../dto/token-payload.dto';
 
 @Injectable()
 export class AuthTokenGuard implements CanActivate {
@@ -29,7 +29,7 @@ export class AuthTokenGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync<JwtPayload>(
+      const payload = await this.jwtService.verifyAsync<TokenPayloadDto>(
         token,
         this.jwtConfiguration,
       );

@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pessoa } from './entities/pessoa.entity';
 import { HashingService } from 'src/auth/hashing/hashing.service';
+import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 
 @Injectable()
 export class PessoasService {
@@ -60,7 +61,11 @@ export class PessoasService {
     return pessoa;
   }
 
-  async update(id: number, updatePessoaDto: UpdatePessoaDto): Promise<Pessoa> {
+  async update(
+    id: number,
+    updatePessoaDto: UpdatePessoaDto,
+    tokenPayload: TokenPayloadDto,
+  ): Promise<Pessoa> {
     const partialUpdatePessoaDto = {
       nome: updatePessoaDto?.nome,
     };
@@ -84,7 +89,7 @@ export class PessoasService {
     return novaPessoa;
   }
 
-  async remove(id: number) {
+  async remove(id: number, tokenPayload: TokenPayloadDto): Promise<void> {
     const pessoa = await this.pessoaRepository.findOne({
       where: { id },
     });
