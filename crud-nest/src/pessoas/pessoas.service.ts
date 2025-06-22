@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -85,8 +86,14 @@ export class PessoasService {
     if (!pessoa) {
       throw new NotFoundException('Pessoa não encontrada');
     }
-    const novaPessoa = await this.pessoaRepository.save(pessoa);
-    return novaPessoa;
+
+    if (tokenPayload.sub !== pessoa.id) {
+      throw new ForbiddenException(
+        'Você não tem permissão para atualizar esta pessoa',
+      );
+    }
+
+    return await this.pessoaRepository.save(pessoa);
   }
 
   async remove(id: number, tokenPayload: TokenPayloadDto): Promise<void> {
@@ -96,6 +103,13 @@ export class PessoasService {
     if (!pessoa) {
       throw new NotFoundException('Pessoa não encontrada');
     }
+
+    if (tokenPayload.sub !== pessoa.id) {
+      throw new ForbiddenException(
+        'Você não tem permissão para remover esta pessoa',
+      );
+    }
+
     await this.pessoaRepository.remove(pessoa);
   }
 }
