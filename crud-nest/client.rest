@@ -12,16 +12,17 @@ GET {{baseUrl}}/recados/4
 
 ### Cria um novo recado
 POST {{baseUrl}}/recados
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
   {
     "texto": "Este é um novo recado de João para Joana",
-    "deId": 6,
     "paraId": 7
   }
 
 ### Atualiza um recado existente
 PATCH {{baseUrl}}/recados/4
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
   {
@@ -30,6 +31,7 @@ Content-Type: application/json
 
 ### Deleta um recado
 DELETE {{baseUrl}}/recados/4
+Authorization: Bearer {{authToken}}
 
 ##############################
 

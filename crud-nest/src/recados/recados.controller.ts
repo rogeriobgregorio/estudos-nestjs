@@ -13,9 +13,13 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { REMOVE_SPACES_REGEX, SERVER_NAME } from './recados.constant';
 import { RegexProtocol } from 'src/common/regex/regex.protocol';
+import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
+import { TokenPayloadParam } from 'src/auth/params/token-payload.param';
+import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 
 @Controller('recados')
 export class RecadosController {
@@ -46,18 +50,31 @@ export class RecadosController {
     return this.RecadosService.findOne(id);
   }
 
+  @UseGuards(AuthTokenGuard)
   @Post()
-  create(@Body() createRecadoDto: CreateRecadoDto) {
-    return this.RecadosService.create(createRecadoDto);
+  create(
+    @Body() createRecadoDto: CreateRecadoDto,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.RecadosService.create(createRecadoDto, tokenPayload);
   }
 
+  @UseGuards(AuthTokenGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRecadoDto: UpdateRecadoDto) {
-    return this.RecadosService.update(+id, updateRecadoDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateRecadoDto: UpdateRecadoDto,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.RecadosService.update(+id, updateRecadoDto, tokenPayload);
   }
 
+  @UseGuards(AuthTokenGuard)
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.RecadosService.remove(id);
+  remove(
+    @Param('id') id: number,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.RecadosService.remove(id, tokenPayload);
   }
 }

@@ -1,6 +1,12 @@
 import { PaginationDto } from './../common/dto/paginatio.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
-import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  Scope,
+} from '@nestjs/common';
 import { Recado } from './entites/recado.entity';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +15,7 @@ import { PessoasService } from '../pessoas/pessoas.service';
 import { RecadosUtils } from './recados.utils';
 import { ConfigService } from '@nestjs/config';
 import appConfig from 'src/app/app.config';
+import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 
 // Scope.DEFAULT means that the service is a singleton and will be instantiated once per application lifecycle.
 // Scope.REQUEST would mean that a new instance is created for each request, which is not necessary here.
@@ -78,9 +85,12 @@ export class RecadosService {
     return recado;
   }
 
-  async create(createRecadoDto: CreateRecadoDto) {
-    const { deId, paraId } = createRecadoDto;
-    const de = await this.pessoasService.findOne(deId);
+  async create(
+    createRecadoDto: CreateRecadoDto,
+    tokenPayload: TokenPayloadDto,
+  ) {
+    const { paraId } = createRecadoDto;
+    const de = await this.pessoasService.findOne(+tokenPayload.sub);
     const para = await this.pessoasService.findOne(paraId);
 
     const novoRecado = {
@@ -97,15 +107,28 @@ export class RecadosService {
       ...recado,
       de: {
         id: recado.de.id,
+        nome: recado.de.nome,
       },
       para: {
         id: recado.para.id,
+        nome: recado.para.nome,
       },
     };
   }
 
-  async update(id: number, updateRecadoDto: UpdateRecadoDto): Promise<Recado> {
+  async update(
+    id: number,
+    updateRecadoDto: UpdateRecadoDto,
+    tokenPayload: TokenPayloadDto,
+  ): Promise<Recado> {
     const recado = await this.findOne(id);
+
+    if (recado.de.id !== +tokenPayload.sub) {
+      throw new ForbiddenException(
+        'Você não tem permissão para editar este recado',
+      );
+    }
+
     recado.texto = updateRecadoDto?.texto ?? recado.texto;
     recado.lido = updateRecadoDto?.lido ?? recado.lido;
 
@@ -113,14 +136,15 @@ export class RecadosService {
     return novoRecado;
   }
 
-  async remove(id: number): Promise<void> {
-    const recado = await this.recadoRepository.findOne({
-      where: { id },
-    });
+  async remove(id: number, tokenPayload: TokenPayloadDto): Promise<void> {
+    const recado = await this.findOne(id);
 
-    if (!recado) {
-      throw new NotFoundException('Recado não encontrado');
+    if (recado.de.id !== +tokenPayload.sub) {
+      throw new ForbiddenException(
+        'Você não tem permissão para deletar este recado',
+      );
     }
+
     await this.recadoRepository.remove(recado);
   }
 }
