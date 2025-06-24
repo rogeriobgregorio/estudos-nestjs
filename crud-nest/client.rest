@@ -1,5 +1,6 @@
 @baseUrl = http://localhost:3000
 @authToken = {{authenticate.response.body.accessToken}}
+@refreshToken = {{authenticate.response.body.refreshToken}}
 
 # RECADOS
 ### Busca todos os recados
@@ -78,4 +79,13 @@ Content-Type: application/json
   {
     "email": "joao@email.com",
     "password": "123456"
+  }
+
+### Renova o token de autenticação
+# @name reAuthenticate
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+  {
+    "refreshToken": "{{refreshToken}}"
   }

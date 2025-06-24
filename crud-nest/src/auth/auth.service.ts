@@ -6,6 +6,7 @@ import { HashingService } from './hashing/hashing.service';
 import jwtConfig from './config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
     @Inject(Pessoa)
     private readonly pessoaRepository: Repository<Pessoa>,
     private readonly hashingService: HashingService,
+
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
     private readonly jwtService: JwtService,
@@ -36,19 +38,38 @@ export class AuthService {
       throw new UnauthorizedException('Invalid password');
     }
 
-    const accessToken = await this.jwtService.signAsync(
+    const accessToken = await this.signJwtAsync<Partial<Pessoa>>(
+      pessoa.id,
+      this.jwtConfiguration.jwtttl,
       {
-        sub: pessoa.id,
         email: pessoa.email,
+      },
+    );
+
+    const refreshToken = await this.signJwtAsync(
+      pessoa.id,
+      this.jwtConfiguration.jwtRefreshTtl,
+    );
+
+    return { accessToken, refreshToken };
+  }
+
+  private async signJwtAsync<T>(sub: number, expiresIn: number, payload?: T) {
+    return await this.jwtService.signAsync(
+      {
+        sub: sub,
+        ...payload,
       },
       {
         secret: this.jwtConfiguration.secret,
         audience: this.jwtConfiguration.audience,
         issuer: this.jwtConfiguration.issuer,
-        expiresIn: this.jwtConfiguration.jwtttl,
+        expiresIn: expiresIn,
       },
     );
+  }
 
-    return { accessToken };
+  async refreshTokens(refreshTokenDto: RefreshTokenDto) {
+    return true;
   }
 }
