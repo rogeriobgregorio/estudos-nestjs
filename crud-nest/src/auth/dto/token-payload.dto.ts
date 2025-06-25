@@ -1,5 +1,5 @@
 export class TokenPayloadDto {
-  sub: string | number;
+  sub: number;
   email: string;
   iat: number;
   exp: number;
