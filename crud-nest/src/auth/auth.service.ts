@@ -24,10 +24,11 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const pessoa = await this.pessoaRepository.findOneBy({
       email: loginDto.email,
+      active: true, // Ensure the user is active
     });
 
     if (!pessoa) {
-      throw new UnauthorizedException('Invalid email or password');
+      throw new UnauthorizedException('User not found or inactive');
     }
 
     const passwordIsValid = await this.hashingService.compare(
@@ -88,10 +89,11 @@ export class AuthService {
 
       const Pessoa = await this.pessoaRepository.findOneBy({
         id: sub,
+        active: true, // Ensure the user is active
       });
 
       if (!Pessoa) {
-        throw new Error('User not found');
+        throw new Error('User not found or inactive');
       }
 
       return this.createTokens(Pessoa);
