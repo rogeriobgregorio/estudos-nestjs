@@ -20,7 +20,11 @@ import { RegexProtocol } from 'src/common/regex/regex.protocol';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 import { TokenPayloadParam } from 'src/auth/params/token-payload.param';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
+import { RoutePolicyGuard } from 'src/auth/guards/route-policy.guard';
+import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
+import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 
+@UseGuards(RoutePolicyGuard)
 @Controller('recados')
 export class RecadosController {
   constructor(
@@ -41,6 +45,7 @@ export class RecadosController {
   ) {}
 
   @Get()
+  @SetRoutePolicy(RoutePolicies.FIND_ALL_RECADOS)
   findAll(@Query() paginationDto: PaginationDto) {
     return this.RecadosService.findAll(paginationDto);
   }
