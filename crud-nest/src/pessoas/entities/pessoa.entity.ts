@@ -8,6 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Recado } from '../../recados/entites/recado.entity';
+import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 
 @Entity('pessoas')
 export class Pessoa {
@@ -38,4 +39,7 @@ export class Pessoa {
 
   @Column({ default: true })
   active: boolean;
+
+  @Column({ type: 'simple-array', default: [] })
+  routePolicies: RoutePolicies[];
 }

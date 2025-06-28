@@ -12,7 +12,7 @@ export class RoutePolicyGuard implements CanActivate {
       ROUTE_POLICY_KEY,
       context.getHandler(),
     );
-    
+    console.log(`Route policy required: ${routePolicyRequerid}`);
     return true;
   }
 }
