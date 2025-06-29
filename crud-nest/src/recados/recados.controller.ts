@@ -56,6 +56,7 @@ export class RecadosController {
   }
 
   @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.CREATE_RECADOS)
   @Post()
   create(
     @Body() createRecadoDto: CreateRecadoDto,

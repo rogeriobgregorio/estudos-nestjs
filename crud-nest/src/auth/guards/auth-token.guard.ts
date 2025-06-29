@@ -50,6 +50,8 @@ export class AuthTokenGuard implements CanActivate {
         throw new UnauthorizedException('User not found or inactive');
       }
 
+      payload['pessoa'] = pessoa; // Attach the pessoa entity to the payload
+
       request[REQUEST_TOKEN_PAYLOAD_KEY] = payload; // Armazena o payload no request
     } catch {
       throw new UnauthorizedException('Invalid token');
