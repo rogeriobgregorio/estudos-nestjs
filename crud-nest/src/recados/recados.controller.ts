@@ -1,4 +1,3 @@
-import { RecadosUtils } from 'src/recados/recados.utils';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { RecadosService } from './recados.service';
@@ -8,15 +7,12 @@ import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
   Patch,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { REMOVE_SPACES_REGEX, SERVER_NAME } from './recados.constant';
-import { RegexProtocol } from 'src/common/regex/regex.protocol';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 import { TokenPayloadParam } from 'src/auth/params/token-payload.param';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
@@ -27,22 +23,7 @@ import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 @UseGuards(RoutePolicyGuard)
 @Controller('recados')
 export class RecadosController {
-  constructor(
-    private readonly RecadosService: RecadosService,
-    private readonly recadosUtils: RecadosUtils,
-
-    @Inject(SERVER_NAME)
-    private readonly serverName: string,
-
-    @Inject('REMOVE_SPACES_REGEX')
-    private readonly removeSpacesRegex: RegexProtocol,
-
-    @Inject('ONLY_LOWERCASE_LETTERS_REGEX')
-    private readonly onlyLowercaseLettersRegex: RegexProtocol,
-
-    @Inject(REMOVE_SPACES_REGEX)
-    private readonly RemoveSpacesRegex: RegexProtocol,
-  ) {}
+  constructor(private readonly RecadosService: RecadosService) {}
 
   @Get()
   @SetRoutePolicy(RoutePolicies.FIND_ALL_RECADOS)

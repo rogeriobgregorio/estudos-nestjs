@@ -2,63 +2,58 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RecadosModule } from '../recados/recados.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { PessoasModule } from '../pessoas/pessoas.module';
-import { ConfigModule, ConfigType } from '@nestjs/config';
-import Joi from '@hapi/joi';
-import appConfig from './app.config';
 import { AuthModule } from 'src/auth/auth.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigType } from '@nestjs/config';
+import * as Joi from 'joi';
+import appConfig from './app.config';
 
 @Module({
   imports: [
     RecadosModule,
     PessoasModule,
     AuthModule,
-    ConfigModule.forFeature(appConfig), // Import the app configuration
-    // Configuration module to load environment variables
+
+    // Load and validate environment variables
     ConfigModule.forRoot({
-      // envFilePath: ['.env', '.env.local'], // Load .env and .env.local files
-      // ignoreEnvFile: false, // Do not ignore .env files
-      load: [appConfig], // Load custom configuration
-      // Validate environment variables using Joi
+      isGlobal: true,
+      load: [appConfig],
       validationSchema: Joi.object({
         DATABASE_TYPE: Joi.string().required(),
         DATABASE_HOST: Joi.string().required(),
         DATABASE_PORT: Joi.number().default(5432),
         DATABASE_USERNAME: Joi.string().required(),
         DATABASE_PASSWORD: Joi.string().required(),
-        DATABASE_NAME: Joi.string().required(),
-        DATABASE_AUTOLOADENTITIES: Joi.boolean().default(true),
-        DATABASE_SYNCHRONIZE: Joi.boolean().default(false),
+        DATABASE_DATABASE: Joi.string().required(),
+        DATABASE_AUTOLOADENTITIES: Joi.boolean()
+          .truthy('true')
+          .falsy('false')
+          .default(true),
+        DATABASE_SYNCHRONIZE: Joi.boolean()
+          .truthy('true')
+          .falsy('false')
+          .default(false),
       }),
     }),
-    // TypeORM configuration
-    TypeOrmModule.forRoot({
-      type: process.env.DATABASE_TYPE as 'postgres',
-      host: process.env.DATABASE_HOST,
-      port: Number(process.env.DATABASE_PORT),
-      username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      autoLoadEntities: Boolean(process.env.DATABASE_AUTOLOADENTITIES),
-      synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE), // Note: set to false in production
-    }),
-    // Alternatively, using TypeORM with async configuration
+
+    // TypeORM async configuration with injected appConfig
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [
+        ConfigModule,
+        ConfigModule.forFeature(appConfig), // <- Necessário para CONFIGURATION(app)
+      ],
       inject: [appConfig.KEY],
-      useFactory: (appConfigurations: ConfigType<typeof appConfig>) => {
-        return {
-          type: appConfigurations.database.type as 'postgres',
-          host: appConfigurations.database.host,
-          port: appConfigurations.database.port,
-          username: appConfigurations.database.username,
-          database: appConfigurations.database.database,
-          password: appConfigurations.database.password,
-          autoLoadEntities: appConfigurations.database.autoLoadEntities,
-          synchronize: appConfigurations.database.synchronize,
-        };
-      },
+      useFactory: (config: ConfigType<typeof appConfig>) => ({
+        type: config.database.type as 'postgres',
+        host: config.database.host,
+        port: config.database.port,
+        username: config.database.username,
+        password: config.database.password,
+        database: config.database.database,
+        autoLoadEntities: config.database.autoLoadEntities,
+        synchronize: config.database.synchronize,
+      }),
     }),
   ],
   controllers: [AppController],

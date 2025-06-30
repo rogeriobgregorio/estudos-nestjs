@@ -8,11 +8,12 @@ import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { TokenPayloadDto } from './dto/token-payload.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(Pessoa)
+    @InjectRepository(Pessoa)
     private readonly pessoaRepository: Repository<Pessoa>,
     private readonly hashingService: HashingService,
 
