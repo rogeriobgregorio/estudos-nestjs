@@ -89,3 +89,18 @@ Content-Type: application/json
   {
     "refreshToken": "{{refreshToken}}"
   }
+
+##############################
+
+# UPLOAD
+### Faz upload de foto de perfil
+POST {{baseUrl}}/pessoas/upload-picture
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=----BoundaryDelimiterHttp
+
+------BoundaryDelimiterHttp
+Content-Disposition: form-data; name="file"; filename="profile.jpg"
+Content-Type: image/jpg
+
+< ./dev/images/profile.jpg
+------BoundaryDelimiterHttp--
